@@ -1,0 +1,124 @@
+{% extends 'with_art/base.html' %} {% block title %}{{ currentproject.title }} —
+STEIN-ARNE WITH{% endblock %} {% block content %}
+<article class="project-detail">
+  <header class="project-header">
+    {% if currentproject.description %}
+    <p class="project-description">{{ currentproject.description }}</p>
+    {% endif %}
+  </header>
+
+  {% if currentproject.entries.all %}
+  <div class="carousel" data-carousel>
+    <div class="carousel__track" data-carousel-track>
+      {% for entry in currentproject.entries.all %}
+      <figure
+        class="carousel__slide {% if entry.video %}carousel__slide--video{% endif %}"
+        {% if entry.video %}data-video="{{ entry.video.url }}"{% endif %}
+      >
+        <div class="carousel__stage">
+          {% if entry.video %}
+          <video
+            src="{{ entry.video.url }}"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            class="carousel__image carousel__video"
+            data-aspect="{{ entry.video.width|default:16 }}/{{ entry.video.height|default:9 }}"
+            aria-label="{{ currentartproject.title }}{% if entry.title %} — {{ entry.title }}{% endif %}"
+          ></video>
+          {% elif entry.image %}
+          <img
+            src="{{ entry.image.url }}"
+            alt="{{ currentartproject.title }}{% if entry.title %} — {{ entry.title }}{% endif %}"
+            loading="lazy"
+            decoding="async"
+            class="carousel__image"
+          />
+          {% else %}
+          <div class="carousel__image carousel__image--empty">No media</div>
+          {% endif %}
+        </div>
+        {% if entry.title %}
+        <figcaption class="carousel__caption">{{ entry.title }}</figcaption>
+        {% endif %}
+      </figure>
+      {% empty %}
+      <p class="empty-state">This project has no images yet.</p>
+      {% endfor %}
+    </div>
+
+    <button
+      class="carousel__btn carousel__btn--prev"
+      data-carousel-prev
+      aria-label="Previous image"
+      type="button"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+    <button
+      class="carousel__btn carousel__btn--next"
+      data-carousel-next
+      aria-label="Next image"
+      type="button"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </button>
+    <div class="carousel__counter">
+      <span data-carousel-current>1</span> / {{ currentproject.entries.count }}
+    </div>
+  </div>
+  {% else %}
+  <p class="empty-state">No images have been added to this project yet.</p>
+  {% endif %}
+</article>
+
+<script>
+  // Pause video when its slide leaves the visible area; resume when it comes back.
+  document.querySelectorAll('.carousel__slide--video').forEach(slide => {
+    const video = slide.querySelector('video');
+    if (!video) return;
+
+    // Apply the video's intrinsic aspect ratio to the stage, so the slot never letterboxes
+    // unless the upload is portrait / square.
+    if (video.dataset.aspect) {
+      const [w, h] = video.dataset.aspect.split('/').map(Number);
+      if (w && h) {
+        const stage = slide.querySelector('.carousel__stage');
+        if (stage) stage.style.setProperty('--video-aspect', `${w} / ${h}`);
+      }
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+    observer.observe(slide);
+  });
+</script>
+
+{% endblock content %}

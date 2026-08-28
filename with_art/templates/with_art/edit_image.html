@@ -1,0 +1,12 @@
+{% extends 'with_art/base.html' %}
+{% block content %}
+
+<h1>Edit Image</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'image_list' %}">Back to Image List</a>
+
+{% endblock content %}

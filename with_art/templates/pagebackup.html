@@ -1,0 +1,160 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'with_art/logo.ico' %}"
+    />
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+        height: max-content;
+        width: 100%;
+        background-color: transparent;
+        overflow: fixed;
+        cursor: none;
+      }
+
+      .custom-cursor {
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background-color: rgba(230, 12, 12, 0.866);
+        border-radius: 50%;
+        pointer-events: none; /* Prevent interaction with the custom cursor */
+        transform: translate(-50%, -50%); /* Center the circle on the mouse */
+        z-index: 100;
+      }
+      .no-custom-cursor {
+        cursor: auto; /* Show default cursor */
+      }
+
+      @font-face {
+        font-family: "Blanka-Regular";
+        src: url("{% static 'with_art/Blanka-Regular.otf' %}")
+          format("opentype");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      canvas {
+        display: block;
+      }
+
+      a {
+        position: relative;
+
+        z-index: 3; /* Make sure this is above the text-container */
+      }
+
+      .link-container {
+        text-align: right; /* Aligns the links to the right */
+        position: relative; /* Ensure the container has a position context */
+        z-index: 30;
+        cursor: none;
+      }
+
+      .icon {
+        width: 30px; /* Adjust width as needed */
+        height: auto; /* Maintain aspect ratio */
+        position: flex;
+        margin-top: 0.4cm;
+        margin-right: 0.4cm;
+        z-index: 4;
+      }
+      .icon-menu-container {
+        position: relative;
+        display: inline-block;
+        margin-top: 0.4cm;
+        margin-right: 0.4cm;
+        z-index: 4;
+        cursor: auto;
+        text-decoration: none;
+      }
+      .menu {
+        display: none; /* Hidden by default */
+        position: absolute;
+        top: 100%; /* Position the menu below the icon */
+        right: 0;
+        background-color: #1f1f1f;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        border-radius: 0px;
+        z-index: 5;
+      }
+
+      .menu a {
+        color: rgb(241, 234, 234);
+        padding: 4vh 5vh;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        font-family: "Blanka-Regular", sans-serif;
+      }
+
+      .menu a:hover {
+        background: linear-gradient(to bottom, #0f0e0e, #282827);
+        color: rgb(247, 243, 243);
+        text-decoration: none;
+      }
+
+      .icon-menu-container:hover .menu {
+        display: block; /* Show the menu when the icon is hovered */
+      }
+    </style>
+  </head>
+
+  <body class="link-container">
+    <!-- Custom cursor element -->
+    <div class="custom-cursor" id="cursor"></div>
+
+    <!-- Icon with dropdown menu -->
+    <div class="icon-menu-container">
+      <!-- Icon for the menu -->
+      <img
+        src="{% static 'with_art/lnr-text-align-right.svg' %}"
+        alt="Menu Icon"
+        class="icon"
+      />
+
+      <!-- Dropdown menu -->
+      <div class="menu">
+        <a href="{% url 'with_art:artprojects' %}">Art&nbsp;Projects</a>
+        <a href="{% url 'with_art:page2' %}">Manifesto</a>
+        <a href="{% url 'with_art:page3' %}">Artist</a>
+      </div>
+    </div>
+    <script>
+      // Get the custom cursor element
+      const cursor = document.getElementById("cursor");
+
+      // Update the position of the custom cursor based on mouse movement
+      document.addEventListener("mousemove", function (e) {
+        cursor.style.left = e.pageX + "px";
+        cursor.style.top = e.pageY + "px";
+      });
+
+      // Hide custom cursor when hovering over links, icons, and menu
+      const noCursorElements = document.querySelectorAll(
+        ".image-grid-item a, .icon-menu-container, .menu"
+      );
+
+      noCursorElements.forEach((element) => {
+        element.addEventListener("mouseenter", () => {
+          cursor.style.opacity = "0"; // Hide the custom cursor by setting opacity to 0
+        });
+
+        element.addEventListener("mouseleave", () => {
+          cursor.style.opacity = "1"; // Show the custom cursor again by setting opacity to 1
+        });
+      });
+    </script>
+
+    {% block content %} {% endblock content %}
+  </body>
+</html>

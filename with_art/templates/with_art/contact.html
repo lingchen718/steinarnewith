@@ -1,0 +1,828 @@
+{% extends 'with_art/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* ── Reset & Scope ─────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:       #0a0a0a;
+    --black-mid:   #111111;
+    --black-light: #161616;
+    --gold:        #c9a84c;
+    --gold-dim:    #a07830;
+    --off-white:   #e8e0d0;
+    --muted:       #7a7060;
+    --border:      #2a2620;
+    --font-display: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+    --font-body:    'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    --font-caption: 'Didact Gothic', 'Century Gothic', Futura, 'Gill Sans', sans-serif;
+    --grain-opacity: 0.045;
+  }
+
+  /* ── Grain Overlay (fixed, non-blocking) ───────────────────────── */
+  .cp-grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: var(--grain-opacity);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+  }
+
+  /* ── Page Shell ────────────────────────────────────────────────── */
+  .cp-page {
+    background: var(--black);
+    color: var(--off-white);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Portrait Block ────────────────────────────────────────────── */
+  .cp-portrait-wrap {
+  position: relative;
+  width: 100%;
+  display: block;
+  background: var(--black);
+  line-height: 0;
+  overflow: hidden;
+}
+
+  .cp-portrait-wrap img {
+  display: block;
+  width: calc(100% + 2px);
+  max-width: none;
+  height: auto;
+  margin-right: -2px;
+  object-fit: unset;
+  object-position: center;
+  filter: contrast(1.06) brightness(0.97);
+}
+
+  /* Dark gradient underlay fades image bottom into page background */
+  .cp-portrait-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 38%;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(10, 10, 10, 0.45) 45%,
+      rgba(10, 10, 10, 0.82) 70%,
+      var(--black) 100%
+    );
+    pointer-events: none;
+  }
+
+ 
+
+  /* ── Eyebrow beneath portrait ──────────────────────────────────── */
+  .cp-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 2.4rem 5vw 0;
+  }
+
+  .cp-eyebrow-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .cp-eyebrow-text {
+    font-family: var(--font-caption);
+    font-size: 0.68rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* ── Section Header ────────────────────────────────────────────── */
+  .cp-section-header {
+    padding: 2rem 5vw 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cp-name {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    color: var(--off-white);
+    line-height: 1;
+  }
+
+  .cp-tagline {
+    font-family: var(--font-caption);
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── Two-Column Contact Grid ───────────────────────────────────── */
+  .cp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 0;
+    padding: 3rem 5vw 6rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── Details Column ────────────────────────────────────────────── */
+  .cp-details {
+    padding-right: 5%;
+    border-right: 1px solid var(--border);
+  }
+
+  .cp-details-section {
+    margin-bottom: 2.4rem;
+  }
+
+  .cp-label {
+    font-family: var(--font-caption);
+    font-size: 0.6rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .cp-value {
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--off-white);
+    line-height: 1.7;
+  }
+
+  .cp-value a {
+    color: var(--off-white);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .cp-value a:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold-dim);
+  }
+
+  /* Availability badge */
+  .cp-availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    background: rgba(201, 168, 76, 0.08);
+    border: 1px solid rgba(201, 168, 76, 0.22);
+    border-radius: 2px;
+    padding: 0.45rem 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .cp-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    animation: cp-pulse 2.2s ease-in-out infinite;
+  }
+
+  @keyframes cp-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.35; transform: scale(0.7); }
+  }
+
+  .cp-availability-text {
+    font-family: var(--font-caption);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* Social icons row */
+  .cp-social {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.25rem;
+  }
+
+  .cp-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--muted);
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    text-decoration: none;
+  }
+
+  .cp-social-link:hover {
+    color: var(--gold);
+    border-color: var(--gold-dim);
+    background: rgba(201, 168, 76, 0.06);
+  }
+
+  .cp-social-link svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  /* Thin divider */
+  .cp-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2rem 0;
+  }
+
+  /* ── Form Column ───────────────────────────────────────────────── */
+  .cp-form-col {
+    padding-left: 6%;
+  }
+
+  .cp-form-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--off-white);
+    margin-bottom: 0.35rem;
+    letter-spacing: 0.02em;
+  }
+
+  .cp-form-sub {
+    font-family: var(--font-caption);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2.2rem;
+  }
+
+  /* Form rows */
+  .cp-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .cp-field {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .cp-field label {
+    font-family: var(--font-caption);
+    font-size: 0.6rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  .cp-field input,
+  .cp-field select,
+  .cp-field textarea {
+    background: var(--black-light);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--off-white);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+  }
+
+  .cp-field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M0 0l6 7 6-7z' fill='%237a7060'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+  }
+
+  .cp-field input::placeholder,
+  .cp-field textarea::placeholder {
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  .cp-field input:focus,
+  .cp-field select:focus,
+  .cp-field textarea:focus {
+    border-color: var(--gold-dim);
+    background: #1a1710;
+  }
+
+  .cp-field option {
+    background: var(--black-mid);
+    color: var(--off-white);
+  }
+
+  .cp-field textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+  }
+
+  /* Budget optional field */
+  .cp-budget-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cp-optional-badge {
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    background: var(--black-light);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.1em 0.4em;
+  }
+
+  /* Submit */
+  .cp-submit-wrap {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .cp-submit {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    border-radius: 2px;
+    font-family: var(--font-caption);
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 0.9rem 2.4rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    font-weight: 600;
+  }
+
+  .cp-submit:hover {
+    background: #d8b85c;
+    transform: translateY(-1px);
+  }
+
+  .cp-submit:active {
+    transform: translateY(0);
+  }
+
+  /* Success message */
+  .cp-success {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-caption);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .cp-success.visible {
+    display: flex;
+    animation: cp-fadein 0.5s ease;
+  }
+
+  @keyframes cp-fadein {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .cp-success-icon {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .cp-success-icon svg {
+    width: 9px;
+    height: 9px;
+    stroke: var(--gold);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ── Footer strip ──────────────────────────────────────────────── */
+  .cp-footer {
+    border-top: 1px solid var(--border);
+    padding: 1.6rem 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .cp-footer-name {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  .cp-footer-copy {
+    font-family: var(--font-caption);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--border);
+  }
+
+  /* ── Responsive ────────────────────────────────────────────────── */
+  @media (max-width: 860px) {
+    .cp-grid {
+      grid-template-columns: 1fr;
+      padding: 2rem 5vw 4rem;
+    }
+
+    .cp-details {
+      padding-right: 0;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .cp-form-col {
+      padding-left: 0;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .cp-row-2 {
+      grid-template-columns: 1fr;
+    }
+
+    .cp-name {
+      font-size: 2.2rem;
+    }
+  }
+</style>
+
+<!-- Grain overlay -->
+<div class="cp-grain" aria-hidden="true"></div>
+
+<div class="cp-page">
+
+  <!-- ── Portrait: full image, no crop ────────────────────────────── -->
+  <div class="cp-portrait-wrap">
+    <img
+      src="{% static 'with_art/img/artist.jpg' %}"
+      alt="Stein-Arne With — portrait"
+      width="1920"
+      loading="eager"
+    />
+  </div>
+
+  <!-- ── Eyebrow rule ──────────────────────────────────────────────── -->
+  <div class="cp-eyebrow">
+    <span class="cp-eyebrow-line"></span>
+    <span class="cp-eyebrow-text">Get in touch</span>
+    <span class="cp-eyebrow-line"></span>
+  </div>
+
+  <!-- ── Artist identity header ────────────────────────────────────── -->
+  <div class="cp-section-header">
+    <h1 class="cp-name" id="cp-artist-name">Stein-Arne With</h1>
+    <p class="cp-tagline" id="cp-artist-tagline">Visual Artist &nbsp;&middot;&nbsp; Oslo, Norway</p>
+  </div>
+
+  <!-- ── Two-column grid ───────────────────────────────────────────── -->
+  <div class="cp-grid">
+
+    <!-- Details column -->
+    <aside class="cp-details">
+
+      <div class="cp-details-section">
+        <span class="cp-label">Availability</span>
+        <div class="cp-availability">
+          <span class="cp-pulse-dot"></span>
+          <span class="cp-availability-text" id="cp-avail-text">Open to commissions</span>
+        </div>
+      </div>
+
+      <div class="cp-divider"></div>
+
+      <div class="cp-details-section">
+        <span class="cp-label">Email</span>
+        <p class="cp-value">
+          <a href="#" id="cp-email-link" id="cp-email-link">studio@steinarnewith.no</a>
+        </p>
+      </div>
+
+      <div class="cp-details-section">
+        <span class="cp-label">Phone</span>
+        <p class="cp-value">
+          <a href="#" id="cp-phone-link">+47 XXX XX XXX</a>
+        </p>
+      </div>
+
+      <div class="cp-details-section">
+        <span class="cp-label">Studio Address</span>
+        <p class="cp-value" id="cp-address">
+          Grunnerlokka Atelier<br>
+          Oslo, Norway
+        </p>
+      </div>
+
+      <div class="cp-details-section">
+        <span class="cp-label">Website</span>
+        <p class="cp-value">
+          <a href="#" id="cp-website-link">steinarnewith.no</a>
+        </p>
+      </div>
+
+      <div class="cp-divider"></div>
+
+      <div class="cp-details-section">
+        <span class="cp-label">Follow</span>
+        <div class="cp-social" id="cp-social-row">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Form column -->
+    <section class="cp-form-col" aria-label="Contact form">
+
+      <h2 class="cp-form-title">Send a message</h2>
+      <p class="cp-form-sub"></p>
+
+      <form id="cp-form" novalidate>
+        {% csrf_token %}
+
+        <div class="cp-row-2">
+          <div class="cp-field">
+            <label for="cp-inp-name">Name</label>
+            <input type="text" id="cp-inp-name" name="name" placeholder="Your name" required autocomplete="name">
+          </div>
+          <div class="cp-field">
+            <label for="cp-inp-email">Email</label>
+            <input type="email" id="cp-inp-email" name="email" placeholder="your@email.com" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="cp-field">
+          <label for="cp-inp-subject">Subject</label>
+          <select id="cp-inp-subject" name="subject" required>
+            <option value="" disabled selected>Select an enquiry type</option>
+            <option value="commission">Commission a work</option>
+            <option value="exhibition">Exhibition proposal</option>
+            <option value="press">Press &amp; media</option>
+            <option value="collaboration">Collaboration</option>
+            <option value="purchase">Purchase / pricing</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="cp-field">
+          <label for="cp-inp-message">Message</label>
+          <textarea id="cp-inp-message" name="message" placeholder="Tell me about your project or enquiry..." required></textarea>
+        </div>
+
+        <div class="cp-field">
+          <label for="cp-inp-budget" class="cp-budget-label">
+            Budget range
+            <span class="cp-optional-badge">Optional</span>
+          </label>
+          <input type="text" id="cp-inp-budget" name="budget" placeholder="e.g. NOK 10 000 – 50 000">
+        </div>
+
+        <div class="cp-submit-wrap">
+          <button type="submit" class="cp-submit">Send enquiry</button>
+          <div class="cp-success" id="cp-success" aria-live="polite">
+            <span class="cp-success-icon">
+              <svg viewBox="0 0 10 8" aria-hidden="true">
+                <polyline points="1,4 4,7 9,1"></polyline>
+              </svg>
+            </span>
+            Message received
+          </div>
+        </div>
+
+      </form>
+    </section>
+
+  </div>
+
+  <!-- ── Footer strip ──────────────────────────────────────────────── -->
+  <footer class="cp-footer">
+    <span class="cp-footer-name" id="cp-footer-name">Stein-Arne With</span>
+    <span class="cp-footer-copy" id="cp-footer-copy">&copy; <span id="cp-year"></span> All rights reserved</span>
+  </footer>
+
+</div>
+
+<!-- ── JS Config & Behaviour ────────────────────────────────────── -->
+<script>
+(function () {
+
+  /* ── Single source of truth ─────────────────────────────────── */
+  const CONTACT = {
+    name:          'Stein-Arne With',
+    tagline:       'Visual Artist \u00b7 Oslo, Norway',
+    email:         'studio@steinarnewith.no',
+    emailHref:     'mailto:studio@steinarnewith.no',
+    phone:         '+47 XXX XX XXX',
+    phoneHref:     'tel:+47XXXXXXXXX',
+    address:       'Grunnerlokka Atelier<br>Oslo, Norway',
+    website:       'steinarnewith.no',
+    websiteHref:   'https://steinarnewith.no',
+    availability:  'Open to commissions',
+    social: [
+      {
+        name: 'Instagram',
+        href: 'https://instagram.com/',
+        svg:  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>'
+      },
+      {
+        name: 'X',
+        href: 'https://x.com/',
+        svg:  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>'
+      },
+      {
+        name: 'LinkedIn',
+        href: 'https://linkedin.com/',
+        svg:  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>'
+      }
+    ]
+  };
+
+  /* ── Apply config to DOM ────────────────────────────────────── */
+  function applyConfig () {
+    // Name & tagline
+    var nameEl = document.getElementById('cp-artist-name');
+    if (nameEl) nameEl.textContent = CONTACT.name;
+
+    var tagEl = document.getElementById('cp-artist-tagline');
+    if (tagEl) tagEl.textContent = CONTACT.tagline.replace('\u00b7', '\u00b7');
+
+    // Email
+    var emailLink = document.getElementById('cp-email-link');
+    if (emailLink) {
+      emailLink.textContent = CONTACT.email;
+      emailLink.href = CONTACT.emailHref;
+    }
+
+    // Phone
+    var phoneLink = document.getElementById('cp-phone-link');
+    if (phoneLink) {
+      phoneLink.textContent = CONTACT.phone;
+      phoneLink.href = CONTACT.phoneHref;
+    }
+
+    // Address
+    var addrEl = document.getElementById('cp-address');
+    if (addrEl) addrEl.innerHTML = CONTACT.address;
+
+    // Website
+    var webLink = document.getElementById('cp-website-link');
+    if (webLink) {
+      webLink.textContent = CONTACT.website;
+      webLink.href = CONTACT.websiteHref;
+    }
+
+    // Availability
+    var availEl = document.getElementById('cp-avail-text');
+    if (availEl) availEl.textContent = CONTACT.availability;
+
+    // Social icons
+    var socialRow = document.getElementById('cp-social-row');
+    if (socialRow) {
+      socialRow.innerHTML = '';
+      CONTACT.social.forEach(function (s) {
+        var a = document.createElement('a');
+        a.href = s.href;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.className = 'cp-social-link';
+        a.setAttribute('aria-label', s.name);
+        a.innerHTML = s.svg;
+        socialRow.appendChild(a);
+      });
+    }
+
+    // Footer
+    var footerName = document.getElementById('cp-footer-name');
+    if (footerName) footerName.textContent = CONTACT.name;
+
+    // Copyright year
+    var yearEl = document.getElementById('cp-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+  }
+
+    /* ── Form submission with real Django backend ─────────────────── */
+  function initForm () {
+    var form    = document.getElementById('cp-form');
+    var success = document.getElementById('cp-success');
+    var btn     = form ? form.querySelector('.cp-submit') : null;
+
+    if (!form || !success || !btn) return;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var name    = form.querySelector('#cp-inp-name').value.trim();
+      var email   = form.querySelector('#cp-inp-email').value.trim();
+      var subject = form.querySelector('#cp-inp-subject').value;
+      var message = form.querySelector('#cp-inp-message').value.trim();
+
+      if (!name || !email || !subject || !message) {
+        [
+          form.querySelector('#cp-inp-name'),
+          form.querySelector('#cp-inp-email'),
+          form.querySelector('#cp-inp-subject'),
+          form.querySelector('#cp-inp-message')
+        ].forEach(function (el) {
+          if (!el.value.trim()) {
+            el.style.borderColor = '#c9a84c';
+            el.addEventListener('input', function clearErr () {
+              el.style.borderColor = '';
+              el.removeEventListener('input', clearErr);
+            }, { once: true });
+          }
+        });
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      var formData = new FormData(form);
+
+      fetch("{% url 'with_art:contact' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Submission failed');
+        return response.json();
+      })
+      .then(function (data) {
+        form.reset();
+        btn.style.display = 'none';
+        success.classList.add('visible');
+      })
+      .catch(function (error) {
+        btn.disabled = false;
+        btn.textContent = 'Send enquiry';
+        alert('There was an error sending your message. Please try again or email directly.');
+      });
+    });
+  }
+
+
+  /* ── Init ───────────────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', function () {
+    applyConfig();
+    initForm();
+  });
+
+})();
+</script>
+{% endblock content %}

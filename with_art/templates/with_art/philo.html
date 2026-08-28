@@ -1,0 +1,1007 @@
+{% extends 'with_art/base.html' %}
+{% load static %}
+
+{% block title %}THE END OF ART? — PHILOSOPHY · STEIN-ARNE WITH{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     PAGE FOUNDATION
+  ═══════════════════════════════════════════════════════════ */
+  .philo-page {
+    background-color: #f8f5ee;
+    min-height: 100vh;
+    padding: 0 0 6rem;
+    font-family: Georgia, 'Palatino Linotype', Palatino, 'Book Antiqua', serif;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     MASTHEAD
+  ═══════════════════════════════════════════════════════════ */
+  .philo-masthead {
+    text-align: center;
+    padding: 5rem 1.5rem 3rem;
+    border-bottom: 1px solid #ccc4b2;
+    margin-bottom: 4rem;
+  }
+
+  .philo-label {
+    display: inline-block;
+    font-family: Georgia, serif;
+    font-size: 0.68rem;
+    font-variant: small-caps;
+    letter-spacing: 0.32em;
+    color: #8a7f6e;
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+  }
+
+  .philo-title {
+    font-family: Georgia, 'Palatino Linotype', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    color: #1c1a14;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    margin: 0 0 1.2rem;
+  }
+
+  .philo-secondary-title {
+    font-family: Georgia, 'Palatino Linotype', serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 400;
+    color: #1c1a14;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    text-align: center;        /* centered */
+    margin: 1rem 0 2.2rem;      /* valid shorthand */
+  }
+
+  .philo-subtitle {
+    font-family: Georgia, serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: #7a7060;
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     READING COLUMN
+  ═══════════════════════════════════════════════════════════ */
+  .philo-column {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1.75rem;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     ESSAY TYPOGRAPHY
+  ═══════════════════════════════════════════════════════════ */
+  .essay-body p {
+    font-size: 1.125rem;
+    line-height: 1.88;
+    color: #2a2620;
+    margin: 0 0 1.9rem;
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  /* Drop cap on the opening paragraph of the essay */
+  .essay-body .drop-cap::first-letter {
+    float: left;
+    font-family: Georgia, 'Palatino Linotype', serif;
+    font-size: 4.4rem;
+    line-height: 0.78;
+    padding-right: 0.13em;
+    padding-top: 0.06em;
+    color: #1c1a14;
+    font-weight: 400;
+  }
+
+  /* ── Section headings (the essay's numbered parts) ────────── */
+  .essay-body .philo-section-title {
+    font-family: Georgia, 'Palatino Linotype', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+    color: #1c1a14;
+    margin: 3.4rem 0 1.7rem;
+    padding-top: 2.3rem;
+    border-top: 1px solid #ccc4b2;
+    text-align: left;
+  }
+
+  .essay-body .philo-section-sub {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.02rem;
+    color: #7a7060;
+    line-height: 1.5;
+    margin: -0.9rem 0 1.7rem;
+    text-align: left;
+  }
+
+  /* ── Blockquotes (quoted passages in the essay) ───────────── */
+  .essay-body blockquote {
+    margin: 2.2rem 2rem;
+    padding: 0.2rem 0 0.2rem 1.6rem;
+    border-left: 3px solid #c9bea8;
+    font-style: italic;
+    color: #4a443a;
+    font-size: 1.08rem;
+    line-height: 1.8;
+  }
+
+  .essay-body blockquote footer,
+  .quote-source {
+    display: block;
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+    font-style: normal;
+    font-variant: small-caps;
+    letter-spacing: 0.12em;
+    color: #8a8070;
+    text-align: right;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SECTION DIVIDER
+  ═══════════════════════════════════════════════════════════ */
+  .section-rule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.6rem 0 2.4rem;
+  }
+
+  .section-rule::before,
+  .section-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ccc4b2;
+  }
+
+  .section-rule span {
+    font-family: Georgia, serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    color: #a09580;
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     ART IMAGE FIGURES
+  ═══════════════════════════════════════════════════════════ */
+  .art-figure {
+    margin: 3.2rem 0 3.6rem;
+  }
+
+  .art-figure-inner {
+  width: 100%;
+  background: transparent;   /* nothing to show behind */
+  display: block;
+  overflow: hidden;
+}
+
+.art-figure-inner img {
+  width: 100%;
+  height: auto;           /* <- keeps the image's true ratio */
+  display: block;
+}
+
+
+
+  /* Placeholder shown until a real image file is supplied */
+  .art-figure-placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(145deg, #e2ddd5 0%, #cdc7bb 45%, #bab2a4 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .art-figure-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 18px,
+      rgba(255,255,255,0.06) 18px,
+      rgba(255,255,255,0.06) 19px
+    );
+  }
+
+  .art-figure-placeholder-label {
+    font-family: Georgia, serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: #8a8070;
+    text-transform: uppercase;
+    z-index: 1;
+  }
+
+  .art-figure figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: #7a7262;
+    letter-spacing: 0.03em;
+    line-height: 1.55;
+    text-align: left;
+    padding-left: 0.1rem;
+  }
+
+  .art-figure figcaption strong {
+    font-style: normal;
+    font-variant: small-caps;
+    letter-spacing: 0.1em;
+    font-size: 0.78rem;
+    color: #5a5449;
+  }
+
+  .art-figure figcaption .fig-lines {
+    display: block;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     COPY PROTECTION
+  ═══════════════════════════════════════════════════════════ */
+  .no-copy {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     PAGE FOOTER DISCLAIMER
+  ═══════════════════════════════════════════════════════════ */
+  .philo-disclaimer {
+    max-width: 720px;
+    margin: 5rem auto 0;
+    padding: 1.6rem 1.75rem 0;
+    border-top: 1px solid #ccc4b2;
+    font-family: Georgia, serif;
+    font-size: 0.76rem;
+    color: #8a8070;
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     RESPONSIVE TWEAKS
+  ═══════════════════════════════════════════════════════════ */
+  @media (max-width: 600px) {
+    .philo-column {
+      padding: 0 1.2rem;
+    }
+
+    .essay-body p {
+      font-size: 1.03rem;
+      line-height: 1.82;
+      text-align: left;
+    }
+
+    .philo-title {
+      font-size: 2.4rem;
+    }
+
+    .essay-body blockquote {
+      margin: 2rem 0.5rem;
+      padding-left: 1rem;
+    }
+  }
+
+  /* ─── BACK MATTER (References / Bibliography / Illustrations) ── */
+  .philo-backmatter {
+    max-width: 720px;
+    margin: 5rem auto 0;
+    padding: 0 1.75rem;
+    font-family: Georgia, 'Palatino Linotype', serif;
+  }
+
+  .philo-backmatter h2 {
+    font-family: Georgia, serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    font-variant: small-caps;
+    letter-spacing: 0.18em;
+    color: #6b645a;
+    text-transform: uppercase;
+    margin: 2.8rem 0 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #d8d2c6;
+  }
+
+  .philo-backmatter ol,
+  .philo-backmatter ul {
+    margin: 0 0 1.5rem;
+    padding-left: 1.4rem;
+    /* smaller + grey */
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #8a8070;
+  }
+
+  .philo-backmatter li {
+    margin-bottom: 0.35rem;
+  }
+
+  /* Illustrations list (uses the Fig. labels, so no marker) */
+  .philo-backmatter ul.illustrations {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .philo-backmatter ul.illustrations li {
+    margin-bottom: 0.6rem;
+  }
+
+  @media (max-width: 600px) {
+    .philo-backmatter {
+      padding: 0 1.2rem;
+    }
+  }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="philo-page">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MASTHEAD
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="philo-masthead">
+    <span class="philo-label">Philosophy</span>
+    <h1 class="philo-title">THE END OF ART?</h1>
+    <h2 class="philo-title">COMMUNICATION IN THE AGE OF <br>THE DEAF, BLIND AND DUMB.</h2>
+    <p class="philo-subtitle">by<br>Stein-Arne With</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ESSAY + FIGURES — wrapped in .no-copy for protection
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="philo-column no-copy" id="essay-protected">
+
+    <div class="essay-body">
+
+      <!-- ── Fig. 1 — the artist's own cover work ────────────── -->
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig1.jpg' %}"
+            alt="The End of Art? — Stein-Arne With"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 1</strong> — <em>The End of Art?</em>, Stein-Arne With, 2010,
+          digital print, 118.9&nbsp;×&nbsp;89.7&nbsp;cm.
+        </figcaption>
+      </figure>
+
+      <!-- ═══ ABSTRACT ═════════════════════════════════════════ -->
+      <h2 class="philo-section-title">Abstract — The End of Art?</h2>
+
+      <p class="drop-cap">
+        Whether we discuss the social communication in our everyday life or communication through art, we are faced with a major theme that is constantly influenced by society’s change. My main focus in this text is to look at this communication from different angles, with a constant focus on the link between the artist, the work of art and the beholder, before I go via Hegel and Bourriaud, and have a critical look at the latter's territory, contemporary art, and the imbalance that I, and others with me, believe is the cause for the gradual fading of the strong light that art is. With Gardar Eide Einarsson and Olafur Eliasson as examples on both topics, I will use the same basic methods as in my studio practise, where the questions raised is far more important than providing answers, linking the topics together before presenting my own subjective theory on what I think art is missing and the new direction I believe we need to take; a trinity based on the search for the profound and the idea of a more valuable communication between the artist and the beholder.
+      </p>
+
+      <!-- ═══ 1. INTRODUCTION ══════════════════════════════════ -->
+      <h2 class="philo-section-title">1. Introduction.</h2>
+
+      <p>
+        ‘What is art?’ is a question that probably has caused debate ever since the word ‘art’ first was defined. But regardless of what ones subjective views on this matter is, one ought to agree on the fact that art is about communication: Every brushstroke in a painting is like a letter in a word, every plane in a sculpture is like a word in a sentence and every object in an installation is like a sentence in a story written in a language chosen by the artist, whether his focus is on the use of symbols, concept, one of the formal means at his disposal, or elsewhere.
+      </p>
+
+      <p>
+        Whether we discuss the social communication in our everyday life or communication through art, we are faced with a major theme that is constantly influenced by society’s change. My main focus in this text is to look at this communication from different angles, with a constant focus on the link between the artist, the work of art and the beholder. Then, via Georg Wilhelm Friedrich Hegel and Nicolas Bourriaud, I will have a critical look at the latter's territory, contemporary art, and the imbalance that I, and others with me, believe is the cause for the gradual fading of the strong light that art is. Even though the light might never fade all the way to black, I still believe it is time for a change, for an alternative direction, and based on this I present my own subjective theory; a trinity based on the search for the profound and the idea of a more valuable communication between the artist and the beholder.
+      </p>
+
+      <p>
+        By using the same basic methods as in my studio practise, where the questions raised are far more important than providing answers, I will paint a picture in which the reader is offered the opportunity to take part in determining the colours, using her own thoughts and opinions. And so it remains to be seen whether it is possible, through such a process, to communicate in a satisfactory manner about communication.
+      </p>
+
+      <!-- ═══ 2. COMMUNICATION ═════════════════════════════════ -->
+      <h2 class="philo-section-title">2. Communication</h2>
+
+      <p>
+        (Com-mu-ni-ca-tion), from the Latin word communis or common: 3a: a process by which information is exchanged between individuals through a common system of symbols, signs or behaviour, or 5a: a technique for expressing ideas effectively.<sup>1</sup>
+      </p>
+
+      <p>
+        Communication, επικοινωνία, comunicación, 通信 or kommunikasjon: Regardless of what language one uses it must be one of the most important words in the human vocabulary. Any form of interaction, either directly between two or several individuals, or via one of the many electronic media we in our time use as a natural, integrated part of our daily lives, is based on communication, thus also shared understanding and information, something the definition above tells us.
+      </p>
+
+      <p>
+        Words (spoken), use of voice (timing, pitch and loudness), body language, facial expressions and non-linguistic sounds (paralanguage) constitutes the basis for the direct communication, while words (written) and symbols represent the basis for the indirect communication (letters, various forms of electronic media).<sup>2</sup>
+      </p>
+
+      <p>
+        In most cases communication is a “two way street: where the sender is also a receiver”<sup>3</sup> (usually by direct interaction), but with the development that includes mobile phones, the personal computer, and all the various opportunities linked to this, one can, without difficulty, also see and understand the negative aspects of this development. Are these products bringing people closer together, or are they a part of that which is to increase loneliness and isolation?
+      </p>
+
+      <p>
+        Since the 1960s, the world has undergone huge transformations. The global innocence has gradually disintegrated, and the optimism that is one of the fruits on the tree of innocence is on its way of falling rotting to the ground. Our thoughts and views on technology have dramatically changed colour, as we have learned to understand that the elements that may make our lives easier, that may bring us closer together via communication, can also be used as means for surveillance and oppression. Medias spin on the news, the accessibility to violence and pornography in both films, television and on internet, the growing proportion of reality shows and the massive load of advertisement that surrounds us every time we move out into the public, imprint on our views of reality, our understanding of values, morality and trust, and thereby the way we communicate. Are we on our way towards a reality, a truth like the one Guy Debord describes in Society of the Spectacle, 1967: “a society where human relations are no longer ‘directly experienced’, but start to become blurred in their ‘spectacular’ representation”,<sup>4</sup> or perhaps a society like the one Sartre implies with the words "Hell is other people"?<sup>5</sup> In that case: Is the importance of shared understanding and information still relevant? Or might it even be more relevant than ever?
+      </p>
+
+      <!-- ═══ 3. COMMUNICATION IN ART ══════════════════════════ -->
+      <h2 class="philo-section-title">3. Communication in art;</h2>
+      <p class="philo-section-sub">communicating through the object, the emotion or the mind?</p>
+
+      <p>
+        In his novel The Body Artist, 2001, Don DeLillo wrote:
+      </p>
+
+      <blockquote>
+        “He talked. After a while she began to understand what she was hearing. It took many levels of perception. It took whole social histories of how people listen to what other people say. There was a peculiarity in his voice, a trait developing even as he spoke, that she was able to follow to its source.”<sup>6</sup>
+      </blockquote>
+
+      <p>
+        Don DeLillos words could easily be put into another context; as a description of the communication between the artist and the beholder.
+      </p>
+
+      <p>
+        At the age of twelve I had my first experience of what art might be; a taste of the power that art can hold. In a book about Salvador Dáli I saw his painting Sleep (fig. 2),<sup>7</sup> and this painting became my point of entry into a world I had previously never seen, or even knew existed. I was mesmerized.
+      </p>
+
+      <p>
+        But in this context, I will not go in to any analysis of the artwork itself,neither will I go deeper into my personal experience. Instead, I will use this as an opportunity to pose the question: What is the cause of an experience like this, if we think in the terms of both communication and the language of art? Is it the work of art that communicates in itself, is it the artists emotions/consciousness that is communicated through the work of art, or is it the interaction between the work of art (and thereby also the artist) and the beholder which defines this communication?
+      </p>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig2.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 2</strong> — <em>Sleep</em>, Salvador Dali, 1937, oil on canvas,
+          50.2&nbsp;×&nbsp;76.7&nbsp;cm, private collection.
+        </figcaption>
+      </figure>
+
+      <p>
+        In his book Art, 1913, the critic and philosopher Clive Bell argues for his formalistic theory and the unique aesthetic quality that he calls ‘Significant Form’;<sup>8</sup> the quality an object holds that evokes a specific, unique aesthetic emotion, or the way form (objects, lines and colour) separately, or in interaction with each other, arouses this specific emotion, regardless of which direction within the visual arts the artist used as the means of communication.
+      </p>
+
+      <p>
+        According to Bell ‘Significant Form’ is the one singular element that all works of art have in common. In spite of this common denominator he also claims that each work of art still evokes something unique in the beholder, and thus provides a unique experience, at the same time as ‘Significant Form’ means that a work of art holds qualities that differentiates it from everything else that is classified as objects. ”We have no other means of recognising a work of art than our feelings for it. The objects that provoke aesthetic emotion vary with each individual”,<sup>9</sup> he declares. “All systems of aesthetics must be based on personal experience, that is to say, they must be subjective”.<sup>10</sup> But even though Bell, on one hand, puts his faith in the subjective interaction of the beholder and the object, he is, on the other hand, highly critical of the beholder as an individual and this individual’s ability to experience something profound on the basis of the formalistic theory he promotes. ”Before a work of art people who feel little or no emotion for pure form find themselves at a loss. They are deaf men at a concert.”<sup>11</sup> And if the beholder should attempt to search for something besides form in the work of art, Bell would characterise this as actions conducted by a person with unclean, defective aesthetic emotions. The person brings with him his own life into the experience, ”the ordinary emotions of life”,<sup>12</sup> but the experience brings nothing new to the person, and the prospect of ecstasy, where Bell believes a good work of art brings a person who is able to enjoy and understand it to its fullest, is not even a part of the equation.<sup>13</sup>
+      </p>
+
+      <!-- ═══ 4. PUTTING THE ARTIST INTO THE EQUATION ═════════ -->
+      <h2 class="philo-section-title">4. Putting the artist into the equation</h2>
+
+      <p>
+        Even from an artists point of view the artworks encounter with the public may provoke ambivalent emotions. For Mark Rothko, to put a painting out into the world was a complex decision filled with risk and horror; an act which can only be described as close to anxiety. And for an artist who was not so preoccupied with the formal in itself, but who was striving to communicate the major human emotions (tragedy, ecstasy, doom etc), the anxiety for this kind of interaction is quite understandable.<sup>14</sup>
+      </p>
+
+      <p>
+        Rothko painted large paintings; a choice based on a desire for communication (fig.3). By this he wanted to contribute an intimacy to the process of painting that he hoped he would be able to pass on to the beholder at a later stage. When painting a small picture it is like viewing the experience through the wrong end of a pair of binoculars, but when painting on a larger scale one places oneself inside the picture, thus will the possibility of letting the experience, and therefore the great emotions, encompass the viewer be present.<sup>15</sup>
+      </p>
+
+      <p>
+        "A picture lives by companionship, expanding and quickening in the eyes of the sensitive observer. It dies by the same token”,<sup>16</sup> Rothko said, and would on the basis of this idea get support from the French painter Delacroix, who believed that a successful painting captures a specific, densified feel and that it is the beholders task to “break the work's code and bring it to life”.<sup>17</sup> But what if the beholder is not able to do this? Does that mean that the artist isn’t communicating well enough, or does it mean that the beholder’s ability to absorb and engage is reduced, that he is, to use Bell's words; like a deaf man at a concert?
+      </p>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig3.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 3</strong> — Mark Rothko, <em>Rothko Chapel Interior</em>, Houston, Texas.
+        </figcaption>
+      </figure>
+
+      <p>
+        Another philosopher, and Bell’s contemporary, R.G. Collingwood’s theory ‘Expression of Emotion’,<sup>18</sup> presented both in Essays in the Philosophy of Art, 1922-1929, and The Principle of Art, 1938, may at first seem ambiguous and contradictory. In one sentence he might refer to art as a higher form of activity, while in the next he refers to art as extremely primitive.<sup>19</sup> A paradox! But for Collingwood art (the aesthetic experience and artistic activity) was the creative moment, it was both Dante’s Paradiso, Michelangelo’s Sistine Chapel (fig.4) and a child's primitive doodling,<sup>20</sup> it was the purity of the mind and spirit, and it was the transformation from the subconscious to consciousness; where everything is boiled down to the “artist's nature as a thinking being”.<sup>21</sup>
+      </p>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig4.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 4</strong> — Michelangelo di Lodovico Buonarroti Simoni,
+          <em>The Ceiling of the Sistine Chapel</em>, Rome, 1508–1512, approx.
+          40 meters (131 feet) long × 13 meters (43 feet) wide.
+        </figcaption>
+      </figure>
+
+      <p>
+        The transfer from conception of the pure thought to the execution of craftsmanship was secondary, but still a necessary and important step in the creative process, where, according to Collingwood, a unique language was created as a natural part of this process. If an artist creates with honesty and integrity, the result will be a unique expression. Although this might be similar to other artists expression, it’s not due to a desire to copy, only to the fact that the feeling that is this particular expressions origin is similar to feelings other previously have experienced.<sup>22</sup> The craft requires skill, but will in itself never measure up to, or communicate, the basis of the experience, which means that the artwork in itself, when it comes down to it, never will be able to live up to the idea of the artwork.<sup>23</sup>
+      </p>
+
+      <!-- ═══ 5. THE END OF ART? ═══════════════════════════════ -->
+      <h2 class="philo-section-title">5. The End of Art?</h2>
+
+      <blockquote>
+        <em>Hamlet:</em> Do you see nothing there?<br>
+        <em>The Queen:</em> Nothing at all, yet all that is I see.<br>
+        <footer>Shakespeare: Hamlet, scene four, third act.<sup>24</sup></footer>
+      </blockquote>
+
+      <p>
+        In the 1820's, due to his position as professor of philosophy in Berlin, Georg Wilhelm Friedrich Hegel held a series of lectures on aesthetics. During these lectures Hegel presented a number of theories that remain central in the history of art. Despite, or perhaps because of, his revered views on art, Hegel was very pessimistic about its future, articulating it as ‘The End of Art’. In these lectures he indicated that art is left naked; without the ability to be innovative, and with the ability to create new variations on old themes as its only alternative.<sup>25</sup>
+      </p>
+
+      <p>
+        About one hundred and seventy years later the art critic and curator Nicolas Bourriaud picked up the glove that Hegel had thrown. In the book, Relational Aesthetics (1998, English 2002), he completely disregards Hegel’s theory with the words ”There is no such thing as any possible ‘end of art’”, because of the fact that art undergoes a constant renewal within the society that it both criticizes and is a part of.<sup>26</sup> But Bourriaud doesn’t stop there. In a glossary at the back of Relational Aesthetics he states the following: “The ‘end of art’ only exists in an idealistic view of history”.<sup>27</sup> He also claims the right to, “not without irony,” re-use Hegel's words in a way that rather focuses on the present instead of dwelling on the past.<sup>28</sup>
+      </p>
+
+      <p>
+        So, let’s follow Bourriaud’s advice. Let's look at the present, whether we choose to call it Post-Modernism or Contemporary Art. But in order to get a correct perspective we must use the past as a reference point, despite of Bourriaud’s views, so let's draw a line for the past with the piece many defines as the end point of Modernism: Tony Smith's Die, 1968.<sup>29</sup> (Fig.5) Although many related to contemporary art are reluctant to look back, whether we use the art of ancient Greece, The Renaissance or particularly Modernism as examples, we can’t separate ourselves from the past just as we can’t separate ourselves from the present or future. The art of the past is our heritage, and we should treat it with respect and preserve it so that the knowledge of these eras will be available for future generations, so that we all have the possibility of achieving a greater understanding of what art can be, at the same time remembering that the words preserve and respect isn’t the same as living in the past.
+      </p>
+
+      <p>
+        For me, Hegel's theory about ‘The End of Art’ isn’t to be interpreted literally, like Bourriaud implies. Creative activity will, in my opinion, never cease to exist. The human creative impulses are essential to every individuals need to express themselves, an expression that also has a social function due to the possibilities of communication. In my eyes, Hegel's words are a metaphor for his biggest concern; his fear about art changing form, ending up as a commercial commodity, harmless and disengaging, with no ability to put us in contact with “all that finds a place in the mind of man”.<sup>30</sup> And several have shared, and still shares, Hegel's fears.
+      </p>
+
+      <!-- ═══ 6. IT CANNOT REFLECT IT ══════════════════════════ -->
+      <h2 class="philo-section-title">6. It can not reflect it because it has become it.</h2>
+
+      <p>
+        Already in the mid 1980s artist Donald Judd put the focus on what he seemed to think was a descending tendency concerning the qualitative aspect of what he called new art. He went as far as to say that the lack of first-class artists was almost complete from the early seventies, and that it’s “the new artists’ task to occur”,<sup>31</sup> while it’s the older, established artists’ task to “uphold a high quality”.<sup>32</sup> Judd also believed that art in the same period lost its “issues”,<sup>33</sup> that the artist already had been negatively influenced by society's decay and yielded to the commercial power, and thus let art become a commodity at almost the same level as any other product. Arts decline he ascribed to “ignorance of historical conditions and of the values of art”, but also questioned the capacity and level of knowledge in general of those employed in the school system; those that are meant to guide young, impressionable minds through a long education.<sup>34</sup>
+      </p>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig5.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 5</strong> — Tony Smith, <em>Die</em>, 1962/1968, steel with oil finish,
+          72&nbsp;×&nbsp;72&nbsp;×&nbsp;72 inches, National Gallery of Art,
+          Gift of the Collectors Committee.
+        </figcaption>
+      </figure>
+
+      <p>
+        While the artist Judd directs his criticism at artists, Bourriaud criticizes amongst other critics and philosophers. ”An overwhelming majority of critics and philosophers are reluctant to come to terms with contemporary practises”, he writes, claiming that the use of past methods of analysis is a major reason why contemporary art is so difficult to interpret.<sup>35</sup> From my point of view this is taking the easy way out. If he is to be an art critic, Bourriaud should never, in any context, disregard the artist’s role in the chain of communication. The curator Bourriaud, on the other hand, gives us a detailed description of various aspects of contemporary art and a negative image of society; especially on the basis of the global commercialization, but many of the elements Bourriaud portray as positive, I disagree with. “The role of artworks is no longer to form imaginary and utopian realties, but to actually be ways of living and models of action within the existing real, whatever the scale chosen by the artist”,<sup>36</sup> he writes in the already mentioned book Relational Aesthetics. If we are to interpret this as a proper definition of the contemporary artist's project, and also look at the way many artists choose to communicate these projects, what has art become? Are meetings, encounters, events, games, festivals, places of conviviality and modelling of a professional activity organized by artists<sup>37</sup> needed due to the lack of meaningful interaction in our society, or activities the general beholder will have difficulties comprehending and viewing as art? Is it enough when Rirkrit Tiravanija organizes a dinner party in a collectors home, setting up all the necessary ingredients to make Thai soup?<sup>38</sup> (fig.6) Is it enough when Christine Hill works at the checkout counter at a supermarket or organizes a weekly gym workshop in a gallery?<sup>39</sup> And when I ask whether it is enough it’s just the first part of the question. The complete question: Is it enough for everyone that art is meant to touch and engage?
+      </p>
+
+      <p>
+        Art has always been a reflection of society and the time the artist is living in, as well as a documentation of what it means to be a human being in different eras. This is one of arts strengths. But where there are strengths there are also pitfalls. What if the society that art is reflecting is a society increasingly superficial and shallow? How long before art is so affected by the very thing it is reflecting that it loses the ability to ask the relevant questions, the questions only art can ask, and becomes the surface it is a reflection of? The words I would use to describe this are: It can not reflect it because it has become it. And when art is transformed into something the viewer can’t relate to, the bridges between the observer and the artist/artwork is brutally torn down.
+      </p>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig6.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 6</strong> — Rirkrit Tiravanija, <em>Untitled, 2002 (the raw and the cooked)</em>.
+        </figcaption>
+      </figure>
+
+      <!-- ═══ 7. DELIVER US FROM THEORY! ═══════════════════════ -->
+      <h2 class="philo-section-title">7. Deliver us from theory!</h2>
+
+      <p>
+        After visiting an Andy Warhol exhibition in 1964, Arthur C. Danto wrote the essay Artworld, regarded as the birth of ‘The institutional art analysis’.<sup>40</sup> In the essay he attempts an analysis of, amongst other things, Andy Warhol's Brillo Boxes, 1964, (fig.7) Jasper Johns’ general use of objects, and Robert Rauschenberg’s Bed, 1955, to explain the difference between the objects we call art and other objects.<sup>41</sup>
+      </p>
+
+      <p>
+        According to Danto knowledge of various theories of art and art history are essential for the beholders ability to regard these works as art, and even for the artist's works to be accepted as just that. In other words, Danto demands from the viewer an acquired theoretical knowledge and a knowledge of the technical terms in order to be able to judge what art is or should be, and considers "the essence of a work of art to be the theoretical context in which it is displayed, not the characteristics of the artwork itself ".<sup>42</sup> Or to put it simple: Art is whatever the theorists at any given time accept as art.
+      </p>
+
+      <p>
+        In the article Deliver us from the theory!<sup>43</sup> research journalist and editor of MARG, Bjørn Vassnes, comments on the impact Danto’s institutional art analysis has had on art since it was published. “The theory has taken control. If art is supposed to speak and appeal to universal needs, something is wrong”,<sup>44</sup> he continues, and it is difficult not to agree. "Today theory comes first, then art," Vassnes writes, and puts art education, like Judd, in addition to major art initiatives, forward as accomplices for the continuation of the imbalance created.<sup>45</sup>
+      </p>
+
+      <p>
+        Art’s for so long been a form of communication that disregards the many borders we have created between us. “It’s a paradox that we today, in history’s richest society, are experiencing that so many have an estranged and alienated relationship to the art of their time.”<sup>46</sup> The simple solution would again be to focus on the lack of knowledge that Danto insists on,<sup>47</sup> “to blame the people”,<sup>48</sup> as Vassnes calls it, but what if the problem lies on another front, in Danto's own back garden, so to say, in the artworlds lack of self-criticism and self-understanding?
+      </p>
+
+      <p>
+        The possibility that theory acts as something limiting rather than expanding when it comes to art as a whole is very much alive. Can theory be anything other than an echo; ambiguous words heard in the deep valleys of the artworld when the idea is developed to the point that it might be possible to present in words? And the demand for this linguistic formulation can be confusing, out of place and inhibitory in itself; as it is presented in a language different to the one that’s always been arts privilege, but also in a language different to the one the general beholder in his daily life uses for communication. Have the expectations towards the beholder and his level of knowledge become so unreasonably high that art has ended up as a form of communication only the initiated are able to understand? Has art become the ‘elitist’ phenomenon Vassnes claims,<sup>49</sup> and that Bell more than insinuated?<sup>50</sup> Is your upbringing, your education important in this context? The answer might be found in the following quote from Danto’s Artworld:
+      </p>
+
+      <blockquote>
+        “The common man is not on this level. To see something as art requires something beyond what the eye can discern - an art theoretical thinking and art historical knowledge; an art world.”
+        <footer>Artworld, part II, Danto, 1964.<sup>51</sup></footer>
+      </blockquote>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig7.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 7</strong> — Andy Warhol, <em>Brillo Soap Pads Box</em>, 1964,
+          silkscreen ink on synthetic polymer paint on wood, 17&nbsp;×&nbsp;17&nbsp;×&nbsp;14 in.,
+          The Andy Warhol Museum, Pittsburgh Founding Collection.
+        </figcaption>
+      </figure>
+
+      <!-- ═══ 8. EINARSSON VERSUS ELIASSON ═════════════════════ -->
+      <h2 class="philo-section-title">8. Einarsson versus Eliasson</h2>
+      <p class="philo-section-sub">
+        (Based on Duchamp: The viewer's role is to determine the weight of the work on the aesthetic scale)<sup>52</sup>
+      </p>
+
+      <p>
+        In most cases language and dialect reveals your place of origin: which continent, country, and usually from which region of the country you have originated. Even those of us who are multilingual are revealed by our mother tongue. If someone from Germany, France, or for that matter Norway, speaks English, some characteristics from our original language usually will affect both pronunciation and intonation.
+      </p>
+
+      <p>
+        Art is often referred to as a universal language, in the past only a partial truth, but in the boundless world of technology and the world of no rules that is contemporary art, it has once again become a statement that, to a certain extent, has regained life. In Art as Experience, John Dewey explains how he feels every culture puts its distinctive mark on the art produced there, and therefore, in a major way, is incorporated in the artists identity and visual language.<sup>53</sup> But if Dewey is correct in his theory, how can it be that two artists with almost identical backgrounds create two completely different languages, two very different expressions? In the end, does it come down to the difference in personality; is it life's little stories that also shape this side of man?
+      </p>
+
+      <p>
+        The starting point is the following: Gardar Eide Einarsson, born in Oslo, Norway in 1976, Olafur Eliasson in Copenhagen, Denmark in 1967, two countries as similar as neighbours can be when it comes to living standard, family structure, collective morality, the school system as well as language. Both had stable childhoods in middle-class homes in the suburbs of their respective capitals, were in their teens drawn to similar subcultures with common interests in the graffiti culture (Einarsson to skateboard<sup>54</sup>, Eliasson breakdance<sup>55</sup>) and educated at state Art Academies. After graduating, both have chosen to live outside their country of birth, respectively New York and Berlin, and have made impressive careers for themselves with exhibitions all over the world.<sup>56</sup>
+      </p>
+
+      <p>
+        The visual language developed by Einarsson early in his career was still highly present during the exhibition Power has a fragrance at the Astrup Fearnley Museum in Oslo, 2010. Black and white canvases of various sizes, showing symbols from the skate scene, from obscure websites, comic books, tattoos, pictures and text from old books, administrative forms, etc. (fig.8) were placed in the museums large rooms along with, amongst others, a spinning neon sign with the words Jesus Saves in blue and red, a static neon sign saying Caligula and a Japanese wall mirror designed to prevent suicide in the subway.
+      </p>
+
+      <p>
+        Apart from the references to contemporary art as a tradition, the stylization of minimalism and the pop arts choice of motifs, a phrase from an earlier exhibition press release springs to mind: “Einarsson is known for works whose apparent directness belies a complex web of meanings”,<sup>57</sup> but the sentence isn’t any more understandable in front of these works than the works for which the press release was written. I feel that I am being kept at a distance. The black and white motifs are not letting me in; if at all any depth exists underneath the plain craftsmanship, underneath the flowing paint that for Einarsson once might have been a metaphor for the individual's struggle against the established, against stereotypes.<sup>58</sup> Is this an ingenious way to incorporate a political message into an environment that needs a wake-up call, or is it a most cunning and intelligent way to show the emperor's new clothes, to show the variations of the same theme, with the same imperfections, again and again and to get away with it? For me, in this context, it’s a manifestation of an artist without ability to renew himself; like a musician that keeps releasing variations of the one hit he had many years ago. Again my mind wanders. This time to Robert Irwin's words about the phenomenal presence: “If you don’t see it, you just don’t see it. It just ain’t there”.<sup>59</sup> And I don’t see it. I don’t see the complexity or the web of meanings. What I do see is another example of how theory can be used: To explain qualities into a piece of art; to tell an uneducated beholder what he’s looking at, like Bourriaud does in the exhibition catalogue:
+      </p>
+
+      <blockquote>
+        “His [Einarsson’s] work casts light on a whole invisible life, and visitors to his exhibitions may feel as though they have turned over a damp stone to find a swarm of agitated insects beneath it.”<sup>60</sup>
+        <footer>Nicolas Bourriaud, 2010</footer>
+      </blockquote>
+
+      <p>
+        All I could find was a dead fly in the windowsill.
+      </p>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig8.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 8</strong> — Gardar Eide Einarsson, <em>Alone Among Friends</em>,
+          acrylic on canvas, 157.5&nbsp;×&nbsp;121.9&nbsp;cm, The Artists collection.
+        </figcaption>
+      </figure>
+
+      <p>
+        If one goes deeper into the pluralistic world of Eliasson, the diversity of both techniques, expressions and materials have made this world bigger than I previously believed it to be. Sculptor, installation artist, architect, photographer, writer, light artist, scientist, landscape designer and set designer are some of the titles you can give Eliasson, with the risk of having left out some he just as well could have deserved. Eliasson's art can be defined in many ways, but must be said to be in the range between nature and technology, or on the outskirts of these, although the artist himself says he is not very interested in nature as nature,<sup>61</sup> but as a tool for communication directly with the beholder, or participant, as he prefer to call the visitors.<sup>62</sup>
+      </p>
+
+      <p>
+        Where Einarsson’s visual language may be perceived as cold and distance-creating, Eliasson's art contains a number of other qualities, and when I put Eliasson's art up against Einarsson’s, I wonder if it can be as simple as substance versus surface.
+      </p>
+
+      <p>
+        While Einarsson often uses the Internet as a basis for information,<sup>63</sup> experiments and scientific theories are a recurring basis for Eliasson, without it making his projects too complicated or unavailable. He isn’t an artist who keeps his theories concealed, but would like the participants to understand the work's structure as part of the experience of each piece.<sup>64</sup> Even in the most complex designs the participant and his or her freedom to interpret is the most important element, and this interaction does, along with the ever-present aspect of time, that Eliasson's work in many cases can be said to have performative qualities.
+      </p>
+
+      <p>
+        Often it’s the materials that define the works content and meaning. Recreation of nature or natural phenomena in places they normally wouldn’t have occurred makes even the simplest elements stand out in a new and exciting way. These items will always be perceived as ‘nature’, but can also be a commentary on the development of modern civilization, and the vulnerability of human systems and the likelihood that these will be broken down. The formal elements and the quality of craftsmanship, in spite of contemporary arts lack of focus on this, have always had a place in Eliasson’s world, although it’s less about the artworks appearance and more about promoting and getting across thoughts and ideas.
+      </p>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig9.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 9</strong> — Olafur Eliasson, <em>The Weather Project, 2003</em>,
+          installation, The Unilever Series.
+        </figcaption>
+      </figure>
+
+      <p>
+        In 2003 The Weather Project (fig.9) was displayed in the Turbine Hall at Tate Modern in London as part four of The Unilever Series, a series of commissioned works, following Anish Kapoor, Louise Bourgeois and Juan Munoz. Even though the construction is based on an enlightened half circle reflected in a mirror on the ceiling, it’s a complete piece of art that focuses on experience and participation, and the blueprint that reveals its construction is again available for the publics’ contemplation. The fog creates a slightly mysterious feel, but the undefined, the unclear is pushed aside by a monumental, yet subtle and elegant, beauty. This is poetry written by a true romantic, or maybe a little boy with a crush; curious about every aspect of being human.
+      </p>
+
+      <p>
+        And those who say that beauty has no place in contemporary art needs to reconsider. For no matter how The Weather Project is defined, as an installation, a sculpture or architecture, it is, when it comes down to it, art. And this is what art should be about: When both the artist and the participant through playing, sharing, through sheer generosity and communication creates experiences, situations where people are invited in, to sit, lie down on the floor for as long as they want, to enjoy, cry, smile or argue; when a couple in love can have a perfect moment that forever will remain as something extraordinary; when anyone who has no particular relationship to art can fall in love with it, and those who already love art can walk away with lumps in their throats, with a precious memory, with thoughts they previously never had.
+      </p>
+
+      <!-- ═══ 9. CONCLUSION ════════════════════════════════════ -->
+      <h2 class="philo-section-title">9. Conclusion.</h2>
+      <p class="philo-section-sub">A personal trinity!</p>
+
+      <p class="philo-trinity">
+        <em>Aesthetic qualities</em> &nbsp;·&nbsp; <em>Theory, references and concept</em> &nbsp;·&nbsp; <em>The Profound</em>
+      </p>
+
+      <p>
+        I believe in balance. Balance is a key word when it comes to my theory of what art should contain. The theory itself is a subjective theory with no direct philosophical connection, i.e. without any direct link to a specific theoretical or philosophical orientation: A trinity that gradually has come to life through a burning interest for art in all its forms, through several years of viewing art, discussing and interacting with artists, teachers and other art enthusiasts ever since my first encounter with Sleep, but most of all from the desire for an alternative direction. Other elements that have influenced me in the shaping of this trinity are the morality and ethics I have gained through all the experiences life had lying in wait for me, and that has created in me a tremendous desire to express myself, discuss and communicate meaningfully through art.
+      </p>
+
+      <p>
+        With feelings like these it's like I've ended up in a wrong era. Today only a few questions the quality of a piece of art. The process is what’s prioritized, despite Baudelaire’s words “the audience’s only interested in the final results”<sup>65</sup>. This has also reduced ‘the masterpiece’ to one of the bad, forbidden words of which there are so many in the contemporary art scene. But what’s caused this fear for the big emotions and thoughts that Rothko was almost obsessed with communicating? Where would art be without the artists that challenged the norm, without the masterpieces? (Fig.10) Is it once again the reflection of society that affects the arts in the most negative way, or is it due to different values in the artist as an individual? Is the desire to achieve what Hegel saw as art's potential gone, or is the artist more concerned with caring for their celebrity status?
+      </p>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig10.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 10</strong> — Pablo Picasso, <em>Guernica</em>, 1937,
+          349.3&nbsp;×&nbsp;776.6&nbsp;cm, Reina Sofía, Spain's national museum of modern art.
+        </figcaption>
+      </figure>
+
+      <p>
+        My views on aesthetic qualities have links in several directions. Alongside the sensuous and the beautiful, the most relevant to me is the craftsmanship, which, along with the formal selection, will help shape the visual expression in a piece.
+      </p>
+
+      <p>
+        The duality between “conviction and technique”<sup>66</sup> Collingwood addresses in the essay Form and Content in Art, and based on his opinions I wonder how he would have regarded the current art scene. Conviction is Collingwood’s name for “the romantic requirement”; to have something to disclose or communicate with ones art, “without which a work of art becomes a school exercise or a pot-boiler”.<sup>67</sup> Technique, “to master ones craft”, Collingwood regarded as “the classical requirement, without which a work of art becomes an incoherent jumble of random gestures.”<sup>68</sup> And with the words “Where you find a defect of conviction on the one hand or of technique on the other, you have found a defect for which nothing can compensate”<sup>69</sup> a standard is set that many artists of our time, in my opinion, would have difficulties living up to.
+      </p>
+
+      <p>
+        For many in our time the craftsmanship’s become something outdated and old-fashioned. There are directions in which a mode of expression with focus on poor workmanship is significant, artists who let their assistants do the technical work and others that consistently get their work produced in a factory. Poor craftsmanship can have an incontrovertible place in a piece, but only because of the artists choice of language; that it brings something to the piece, communicates something significant on the basis of the artwork’s underlying theme, not because of lack of skills. So if an artist consistently shows poor craftsmanship one must be allowed to ask critical questions.
+      </p>
+
+      <p>
+        One of the main themes in the article Deliver us from the theory!<sup>70</sup> is what I would choose to call the artist's apathy. “If you’re going to make it as an artist today you have to play on the same team as the theorists”,<sup>71</sup> Vassnes writes. For me this is just one of many problems.
+      </p>
+
+      <p>
+        In the past artists fought for what they believed in. If they wanted change they did whatever was needed to turn things around. Impressionism, Cubism, Futurism, and Dadaism are some examples on movements developed by the artists themselves.<sup>72</sup> Now most artists are sitting around, waiting for the next thing they should have to deal with, while theorists and curators have taken the initiative.
+      </p>
+
+      <p>
+        An example of this is Altermodern, Bourriaud’s self proclaimed global phenomenon<sup>73</sup> presented at the Tate Triennial, 2009. Already in the manifesto Bourriaud declared that “postmodernism is dead”,<sup>74</sup> and should be commended for showing signs of ambition, but in a project where the relations you can create with the artwork is regarded as the art, rather than the artwork itself,<sup>75</sup> it feels to me like something significant has been lost. Or can we say that art is developing in the right direction when Lars Vilks, the man behind the cartoon drawing of Mohammed as a dog, believes that the reaction towards him is the work of art, rather than his drawing?<sup>76</sup>
+      </p>
+
+      <p>
+        Although I am critical to the development of contemporary art, I believe that two of contemporary art's most reviled elements, theory and concept, has a rightful place in any direction art takes. The problem for me is the imbalance and one-sidedness created by theory that Vassnes criticizes in his article. I’m also critical to a number of artists' choice of themes. Many concepts feel inaccessible and cryptic, others completely self-centered; in a way that gives very little opportunity for a viewer to put themselves into the project, relate to it, both emotionally and intellectually. And then there are the concepts that create total indifference: How is a project of paintings that deals with reproduction of, for example, a type of marble supposed to enrich my life in any other way than as a decorative area on a wall, i.e. surface? (fig.11) Unless the artist himself, or a theorist, angles the project as an exploration of painting and the tradition of painting; then we would be obliged to accept the depth of the project, to look at it as art in the theoretical sense and put away all quality assessments, and with it the words good and bad. And if the deaf, dumb and blind in this context is the artist, the beholder or theorists, philosophers and curators is anyone’s decision.
+      </p>
+
+      <figure class="art-figure">
+        <div class="art-figure-inner">
+          <img
+            src="{% static 'with_art/img/philosophy/fig11.jpg' %}"
+            draggable="false"
+          />
+        </div>
+        <figcaption>
+          <strong>Fig. 11</strong> — Fredrik Værslev, <em>Untitled</em>, 2010, spray paint, house paint,
+          corrosion protective spray and white spirit on canvas / wooden stretcher,
+          145&nbsp;×&nbsp;155&nbsp;×&nbsp;3.5&nbsp;cm.
+        </figcaption>
+      </figure>
+
+      <p>
+        Personally, I want to communicate, to make the beholder feel, think; to take him to another place than he was before experiencing my piece. The most important tools for me in this process are honesty and integrity. If I approach each project with total honesty and openness, combined with my beliefs in, amongst others, craftsmanship, the possibility that someone will relate to my work grows considerably. They will be able to see themselves, to recognize something familiar, if only in the details, and also feel a sense of belonging and community through this recognition. They will understand the opportunities inherent in turning something negative into something positive, “to recover beauty from evil,” as Baudelaire called it.<sup>77</sup> Maybe this will be the seed that blossoms into something bigger in them, something deeper, and something profound.
+      </p>
+
+      <p>
+        And even if it only starts with a little seed, I know that art has the power to influence lives on many levels.
+      </p>
+
+      <p>
+        Art has changed mine.
+      </p>
+
+    </div><!-- /essay-body -->
+
+  </div><!-- /philo-column .no-copy -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       DISCLAIMER
+  ═══════════════════════════════════════════════════════════ -->
+  <footer class="philo-disclaimer">
+    &copy; STEIN-ARNE WITH &mdash; All text on this page are the copyrighted work
+    of the artist. Copying or sharing is not permitted.
+  </footer>
+
+</div><!-- /philo-page -->
+<!-- ═══════════════════════════════════════════════════════════
+     BACK MATTER — REFERENCES, BIBLIOGRAPHY, ILLUSTRATIONS
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="philo-backmatter">
+
+    <h2>References</h2>
+    <ol>
+      <li>Definition, Idictionary, http://www.i.word.com/idictionary/</li>
+      <li>Hogg, Michael A. and Vaughan, Graham M., Social Psychology, Fifth edition, p 566</li>
+      <li>Hogg, Michael A. and Vaughan, Graham M., Social Psychology, Fifth edition, p 564</li>
+      <li>Bourriaud, Nicolas, Relational Aesthetics, Description of Guy Debords “Society of the Spectacle”, p 9</li>
+      <li>http://www.scribd.com/doc/2925864/No-Exit-by-Jean-Paul-Sartre</li>
+      <li>DeLillo, Don, The Body Artist, p 65</li>
+      <li>Descharnes, Robert and Néret, Gillet, Dali, The Paintings, Volume I (1904-1946), p 291</li>
+      <li>Bell, Clive, Art, Significant Form; first mentioned on p 11</li>
+      <li>Bell, Clive, Art, pp 8, 9</li>
+      <li>Bell, Clive, Art, pp 9, 10</li>
+      <li>Bell, Clive, Art, p 29</li>
+      <li>Ibid</li>
+      <li>Bell, Clive, Art, p 30</li>
+      <li>Schama, Simon, Power of Art, Rothko, DVD</li>
+      <li>Rothko, Mark, Writings on Art, p 74</li>
+      <li>Rothko, Mark, Writings on Art, p 57</li>
+      <li>Bourriaud, Nicolas, Relational Aesthetics, Delacroix, the journal of, p 26</li>
+      <li>Collingwood, R.G, The Principles of Art, Art as Language, pp 273-285</li>
+      <li>Collingwood, R.G, Essays in the Philosophy of Art, Outlines of a Philosophy of Art, pp 55-57</li>
+      <li>Collingwood, R.G, Essays in the Philosophy of Art, Outlines of a Philosophy of Art pp 56-58. The principle of art, Art as Language, p 275</li>
+      <li>Collingwood, R.G, The Principles of Art, Art as Language, p 275</li>
+      <li>Ibid</li>
+      <li>Collingwood, R.G, The Principles of Art, Essays in the Philosophy of Art.</li>
+      <li>Shakespeare, William, Hamlet, p 241</li>
+      <li>Hegel, Georg Wilhelm Friedrich, Introductory lectures on Aesthetics, Part II-The End of Art, p 46</li>
+      <li>Bourriaud, Nicolas, Relational Aesthetics, p 18</li>
+      <li>Bourriaud, Nicolas, Relational Aesthetics, p 108</li>
+      <li>Ibid</li>
+      <li>Tony Smith, Die, 1968, Art history, Lecture on Modernism, NISS, 5/9-07, Lecturer Maj Britt Bergh</li>
+      <li>Hegel, Georg Wilhelm Friedrich, Introductory lectures on Aesthetics, The Conception of Artistic Beauty, p 51</li>
+      <li>Art in Theory, 1900-2000, p 1139, Donald Judd, from …not about master-pieces but why there are so few of them</li>
+      <li>Ibid</li>
+      <li>Art in Theory, 1900-2000, p 1142, Donald Judd, from …not about master-pieces but why there are so few of them</li>
+      <li>Art in Theory, 1900-2000, pp 1139-1143, Donald Judd, from …not about master-pieces but why there are so few of them</li>
+      <li>Bourriaud, Nicolas, Relational Aesthetics, p 7</li>
+      <li>Bourriaud, Nicolas, Relational Aesthetics, p 13</li>
+      <li>Bourriaud, Nicolas, Relational Aesthetics, p 28</li>
+      <li>Bourriaud, Nicolas, Relational Aesthetics, p 7</li>
+      <li>Bourriaud, Nicolas, Relational Aesthetics, p 8</li>
+      <li>Mølster, Eva Løveid, Excerpts from “Et bilde holdt oss fanget - en revurdering av George Dickies institusjonelle kunstteori” (”A picture held us captive - a reassessment of George Dickies institutional theory of art”), Thesis in philosophy, Uib (Bergen, 2001), Compendium, NISS, 23/2-09 (My translation)</li>
+      <li>Danto, Arthur C. Artworld, Compendium, NISS, 23/2-09 (My translation)</li>
+      <li>Danto, Arthur C. Artworld, Part III, Compendium, NISS, 23/2-09 (My translation)</li>
+      <li>Vassnes, Bjørn, Fri oss fra teorien! (Deliver us from theory!), Article, Dagbladet 3/10-07 (My translation)</li>
+      <li>Ibid</li>
+      <li>Ibid</li>
+      <li>Ibid</li>
+      <li>Danto, Arthur C. Artworld, Part II, 1964, Compendium, NISS, 23/2-09 (My translation)</li>
+      <li>Vassnes, Bjørn, Fri oss fra teorien! (Deliver us from theory!), Article, Dagbladet 3/10-07 (My translation)</li>
+      <li>Ibid</li>
+      <li>Bell, Clive, Art</li>
+      <li>Danto, Arthur C. Artworld, Part II, 1964, Compendium, NISS, 23/2-09 (My translation)</li>
+      <li>Duchamp, Marcel, Den skapende handling (The creative act), Compendium, NISS, 24/8-08 (My translation)</li>
+      <li>Dewey, John, Art as Experience, Chapter 13; Art and Civilization, pp 339-351</li>
+      <li>Bollen, Christopher, Gardar Eide Einarsson, Article, http://www.interviewmagazine.com/art/gardar-eide-einarsson/</li>
+      <li>Zarin, Synthia, Seeing Things – the art of Olafur Eliasson, The New Yorker, 13/11-06 http://newyorker.com/archive/2006/11/13/061113fa_fact_zarin?currentPage=all</li>
+      <li>(Einarsson) Kristensen, Eivind, Norges ukjente stjerne (Norway's unknown star), Article, Dagbladet, 4/5-10 + http://www.kulturnett.no/kunstner_og_artister/kunstner_og_artister.jsp?id &nbsp;(Eliasson) http://www.olafureliasson.net/</li>
+      <li>Press Release, “No Chaos, Damn It!” http://www.honorfraser.com/?s=past&amp;eid=3&amp;c=press</li>
+      <li>Bollen, Christopher, Gardar Eide Einarsson, Article, http://www.interviewmagazine.com/art/gardar-eide-einarsson/</li>
+      <li>Weschler, Lawrence, Seeing Is Forgetting the Name of the Thing One Sees: A Life of Contemporary Artist Robert Irwin, p66</li>
+      <li>Bourriaud, Nicolas, The Larsen Effect: Gardar Eide Einarsson and the evacuation of forms, Power has a fragrance: Exhibition Catalogue</li>
+      <li>Olafur Eliasson, Astrup Fearnley Museum for Modern Art, Artist Profile http://afmuseet.no/printer_friendly.php?artist_id=1</li>
+      <li>Diehl, Carol, “Northern Lights”(Olafur Eliasson), Art in America, October, 2004, pp.108-115 http://www.caroldiehl.com/WRITINGS/Writing_features/northernlights.htm</li>
+      <li>Haramis, Nick, Gardar Eide Einarsson: The New Art Politico, BlackBook, 9/1-09 http://www.blackbookmag.com/article/gardar-eide-einarsson-the-new-art-politico/5794</li>
+      <li>Studio Olafur Eliasson, pp.116-123</li>
+      <li>Baudelaire, Charles, Salon de1846, What is the purpose of the Critique?, Charles Baudelaire, Solum Publishing, Oslo, 2000, p 13</li>
+      <li>Collingwood, R.G, Essays in the Philosophy of Art, Form and Content in Art, p 231</li>
+      <li>Ibid</li>
+      <li>Ibid</li>
+      <li>Ibid</li>
+      <li>Vassnes, Bjørn, Fri oss fra teorien! (Deliver us from theory!), Article, Dagbladet 3/10-07 (My translation)</li>
+      <li>Ibid</li>
+      <li>Art history, Lecture on Modernism, part II, NISS, 12/9-07, Lecturer Maj Britt Bergh</li>
+      <li>Borriaud, Nicolas, Altermodern Manifesto, 2009 http://www.tate.org.uk/britain/exhibidions/altermodern/manifesto.shtm</li>
+      <li>Ibid</li>
+      <li>Ibid</li>
+      <li>Vassnes, Bjørn, Fri oss fra teorien! (Deliver us from theory!), Article, Dagbladet 3/10-07 (My translation)</li>
+      <li>Baudelaire, Charles, Les Fleurs du Mal, Foreword, 1857. Translateted by Dahlen, Haakon, published as ‘Det Vondes Blomar’ (My translation)</li>
+    </ol>
+
+    <h2>Bibliography</h2>
+    <ol>
+      <li>Definition, Idictionary; www.i.word.com/idictionary/</li>
+      <li>Hogg, Michael A. and Vaughan, Graham M., Social Psychology, Fifth Edition, Pearson Education Limited 2008</li>
+      <li>Bourriaud, Nicolas, Relational Aestethics, Les presses du réel, 2002 (English translation)</li>
+      <li>Sartre, Jean Paul, No Exit, http://www.scribd.com/doc/2925864/No-Exit-by-Jean-Paul-Sartre</li>
+      <li>Don DeLillo, The Body Artist, Picador, 2001</li>
+      <li>Dali, The Paintings, Volume I (1904-1946), Descharnes, Robert and Néret, Gillet, 2004</li>
+      <li>Bell, Clive, Art, 1913, Kessinger Legacy Reprints (Frederick A. Stokes Company 2010)</li>
+      <li>Schama, Simon, Power of Art, DVD, Rothko, BBC, World Wide ltd, 2006</li>
+      <li>Rothko, Mark, Writings on Art, Yale University Press, 2006 (Published in French as Écrits sur l’art, 1934-1969 by Mark Rothko, Éditions Flammarion, Paris, France)</li>
+      <li>Delacroix, Eugene, the Journal of, Phaidon Press Limited, 1951, Reprinted 2010</li>
+      <li>Collingwood, R.G, The Principles of Art, Oxford University Press, 1958 (Clarendon Press 1938)</li>
+      <li>Collingwood, R.G, Essays in the Philosophy of Art, Indiana University Press 1964</li>
+      <li>Shakespeare, William, Hamlet, Marks, Julia and Jordan, Paul Editors, Longman Group UKLimited, 1993</li>
+      <li>Hegel, Georg Wilhelm Friedrich, Introductory lectures on Aesthetics, Penguin Books, 2004</li>
+      <li>Lecture on Modernism, NISS, 5/9-07, Lecturer Maj Britt Bergh</li>
+      <li>Art in Theory, 1992 2003, Edited by Charles Harrison &amp; Paul Wood, Blackwell Publishing, 2003</li>
+      <li>Mølster, Eva Løveid, Excerpts from “Et bilde holdt oss fanget - en revurdering av George Dickies institusjonelle kunstteori” (”A picture held us captive - a reassessment of George Dickies institutional theory of art”), Thesis in philosophy, Uib (Bergen, 2001), Compendium, NISS, 23/2-09 (My translation)</li>
+      <li>Danto, Arthur C. Artworld, Compendium, NISS, 23/2-09 (My translation)</li>
+      <li>Vassnes, Bjørn, Fri oss fra teorien! (Deliver us from theory!), Article, Dagbladet 3/10-07 (My translation)</li>
+      <li>Duchamp, Marcel, Den skapende handling (The creative act), Compendium, NISS, 24/8-08 (My translation)</li>
+      <li>Dewey, John, Art as Experience, Perigee, Penguin Books Ltd, 1934</li>
+      <li>Bollen, Christopher, Gardar Eide Einarsson, Article, http://www.interviewmagazine.com/art/gardar-eide-einarsson/</li>
+      <li>Zarin, Synthia, Seeing Things – the art of Olafur Eliasson, The New Yorker, 13/11-06 http://newyorker.com/archive/2006/11/13/061113fa_fact_zarin?currentPage=all</li>
+      <li>Kristensen, Eivind, Norges ukjente stjerne (Norway's unknown star), Article, Dagbladet, 4/5-10 http://www.kulturnett.no/kunstner_og_artister/kunstner_og_artister.jsp?id</li>
+      <li>Information education http://www.olafureliasson.net/</li>
+      <li>Press Release, “No Chaos, Damn It!” Gardar Eide Einarsson http://www.honorfraser.com/?s=past&amp;eid=3&amp;c=press</li>
+      <li>Weschler, Lawrence, Seeing Is Forgetting the Name of the Thing One Sees: A Life of Contemporary Artist Robert Irwin, University of California Press, 2008</li>
+      <li>Bourriaud, Nicolas, The Larsen Effect: Gardar Eide Einarsson and the evacuation of forms, Power has a fragrance: Exhibition Catalogue</li>
+      <li>Olafur Eliasson, Astrup Fearnley Museum for Modern Art, Artist Profile http://afmuseet.no/printer_friendly.php?artist_id=1</li>
+      <li>Diehl, Carol, “Northern Lights”(Olafur Eliasson), Art in America, October, 2004, pp.108-115 http://www.caroldiehl.com/WRITINGS/Writing_features/northernlights.htm</li>
+      <li>Haramis, Nick, Gardar Eide Einarsson: The New Art Politico, BlackBook, 9/1-09 http://www.blackbookmag.com/article/gardar-eide-einarsson-the-new-art-politico/5794</li>
+      <li>Eliasson, Olafur, Engberg-Pedersen, Anna, Ursprung, Phillip, Studio Olafur Eliasson, An Encyclopedia, 2008</li>
+      <li>Baudelaire, Charles, Salon de1846, What is the purpose of the Critique?, Charles Baudelaire, Solum Publishing, Oslo, 2000</li>
+      <li>Art history, Lecture on Modernism, NISS, 12/9-07, Lecturer Maj Britt Bergh</li>
+      <li>Baudelaire, Charles, Les Fleurs du Mal, 1857. Translateted by Dahlen, Haakon, published as ‘Det Vondes Blomar’ (My translation)</li>
+      <li>Bale, Kjersti, Estetikk, En Innføring, Pax Publishing a/s, Oslo, 2009</li>
+    </ol>
+
+    <h2>Illustrations</h2>
+    <ul class="illustrations">
+      <li><strong>Fig. 1</strong> (Front Page) The End of Art? Stein-Arne With, 2010, Digital Print, 118,9 x 89,7, The Artists Collection</li>
+      <li><strong>Fig. 2</strong> Sleep, Dali, Salvador, 1937, Oil on canvas, 50.2x76.7 cm, Private collection</li>
+      <li><strong>Fig. 3</strong> Mark Rothko, Rothko Chapel Interior, Houston, Texas.</li>
+      <li><strong>Fig. 4</strong> The Ceiling of the Sistine Chapel, Rome, Michelangelo di Lodovico Buonarroti Simoni, 1508-1512, Approx 40 meters (131 feet) long x 13 meters (43 feet) wide.</li>
+      <li><strong>Fig. 5</strong> Tony Smith, Die, 1962/1968, Steel with oil finish, 72 x 72 x 72 inches, National Gallery of Art, Gift of the Collectors Committee</li>
+      <li><strong>Fig. 6</strong> Rirkrit Tiravanija, Untitled, 2002 (the raw and the cooked)</li>
+      <li><strong>Fig. 7</strong> Andy Warhol, Brillo Soap Pads Box, 1964, Silkscreen ink on synthetic polymer paint on wood, 17 x 17 x 14 inches, The Andy Warhol Museum, Pittsburgh Founding Collection.</li>
+      <li><strong>Fig. 8</strong> Gardar Eide Einarsson, Alone Among Friends, Acrylic on canvas, 157.5 x 121.9 cm, The Artists collection</li>
+      <li><strong>Fig. 9</strong> Olafur Eliasson, The Weather Project, 2003, Installation, The Unilever Series</li>
+      <li><strong>Fig. 10</strong> Pablo Picasso, Guernica, 1937, 349.3 x 776.6 cm, Reina Sofía, Spain's national museum of modern art</li>
+      <li><strong>Fig. 11</strong> Fredrik Værslev, Untitled, 2010, Spray paint, house paint, corrosion protective spray and white spirit on canvas / wooden stretcher, 145 x 155 x 3.5 cm</li>
+    </ul>
+
+  </section><!-- /philo-backmatter -->
+
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- COPY PROTECTION START ─────────────────────────────────────────────────────
+     This block prevents casual copying of text and images from the essay.
+     It is self-contained and can be removed entirely to disable protection.
+     ─────────────────────────────────────────────────────────────────────── -->
+<script>
+(function () {
+  'use strict';
+
+  var container = document.getElementById('essay-protected');
+  if (!container) return;
+
+  /* ── Block text/content events ─────────────────────────────── */
+  var blockedEvents = ['copy', 'cut', 'contextmenu', 'selectstart', 'dragstart'];
+
+  blockedEvents.forEach(function (eventName) {
+    container.addEventListener(eventName, function (e) {
+      e.preventDefault();
+      return false;
+    }, true);
+  });
+
+  /* ── Disable image dragging ────────────────────────────────── */
+  var images = container.querySelectorAll('img');
+  for (var i = 0; i < images.length; i++) {
+    images[i].setAttribute('draggable', 'false');
+    images[i].style.pointerEvents = 'none';
+  }
+
+  /* ── Re-apply user-select via inline style (belt and suspenders) ─ */
+  container.style.userSelect = 'none';
+  container.style.webkitUserSelect = 'none';
+  container.style.mozUserSelect = 'none';
+  container.style.msUserSelect = 'none';
+
+})();
+</script>
+<!-- COPY PROTECTION END ──────────────────────────────────────────────────── -->
+{% endblock %}
+

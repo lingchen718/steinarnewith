@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}STEIN-ARNE WITH{% endblock %}</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'with_art/img/logo.ico' %}"
+    />
+    <link rel="stylesheet" href="{% static 'with_art/css/style.css' %}" />
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <a href="{% url 'with_art:home' %}">STEIN-ARNE WITH</a>
+      </div>
+      <nav class="nav">
+        <ul>
+          <li><a href="{% url 'with_art:current_list' %}">CURRENT</a></li>
+          <li><a href="{% url 'with_art:artprojects' %}">PROJECTS</a></li>
+          <li><a href="{% url 'with_art:philo' %}">PHILOSOPHY</a></li>
+          <li><a href="{% url 'with_art:contact' %}">CONTACT</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>{% block content %}{% endblock %}</main>
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <script src="{% static 'with_art/js/main.js' %}"></script>
+
+    {% block extra_scripts %}{% endblock %}
+  </body>
+</html>

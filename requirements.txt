@@ -1,0 +1,1 @@
+django-admin-sortable2==2.3.1

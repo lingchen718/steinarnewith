@@ -1,0 +1,21 @@
+# 敏感信息
+.env
+
+# 数据库
+db.sqlite3
+
+# 虚拟环境（两个都要！）
+web-env/
+web_env/
+venv/
+.venv/
+
+# 媒体文件（后台上传的内容，不上传）
+media/
+
+# 编译产物
+__pycache__/
+*.pyc
+
+# 静态文件收集目录
+staticfiles/

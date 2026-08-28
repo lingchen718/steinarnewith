@@ -1,0 +1,91 @@
+{% extends 'with_art/base.html' %} {% block content %}
+<section class="projects">
+  <ul class="projects-list">
+    {% for artproject in artprojects %}
+    <li class="project-row">
+      <a
+        href="{% url 'with_art:currentproject' artproject.slug %}"
+        class="project-link"
+      >
+        <figure
+          class="project-figure {% if artproject.cover_video %}project-figure--video{% endif %}"
+          {% if artproject.cover_video %}data-video="{{ artproject.cover_video.url }}"{% endif %}
+        >
+          {% if artproject.cover_image %}
+          <img
+            src="{{ artproject.cover_image.url }}"
+            alt="{{ artproject.title }}"
+            loading="lazy"
+            class="project-thumb"
+          />
+          {% elif artproject.cover_video %}
+          <div class="project-thumb project-thumb--empty">Video project</div>
+          {% elif artproject.entries.first %}
+          <img
+            src="{{ artproject.entries.first.image.url }}"
+            alt="{{ artproject.entries.first.title|default:artproject.title }}"
+            loading="lazy"
+            class="project-thumb"
+          />
+          {% else %}
+          <div class="project-thumb project-thumb--empty">No image</div>
+          {% endif %}
+        </figure>
+      </a>
+    </li>
+    {% empty %}
+    <li class="empty-state">No current projects.</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<script>
+  document.querySelectorAll('.project-figure--video').forEach(fig => {
+    const url = fig.dataset.video;
+    const img = fig.querySelector('img.project-thumb');
+    if (!url || !img) return;
+
+    const video = document.createElement('video');
+    video.src = url;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = 'none';
+    video.className = 'project-thumb';
+    video.setAttribute('aria-hidden', 'true');
+
+    Object.assign(video.style, {
+      position: 'absolute',
+      inset: '0',
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      opacity: '0',
+      transition: 'opacity .2s ease',
+      pointerEvents: 'none',
+    });
+    Object.assign(img.style, { transition: 'opacity .2s ease' });
+    fig.style.position = 'relative';
+
+    fig.appendChild(video);
+
+    let played = false;
+    fig.addEventListener('mouseenter', () => {
+      img.style.opacity = '0';
+      video.style.opacity = '1';
+      if (!played) {
+        played = true;
+        video.currentTime = 0;
+      }
+      video.play().catch(() => {});
+    });
+    fig.addEventListener('mouseleave', () => {
+      video.pause();
+      video.currentTime = 0;
+      img.style.opacity = '1';
+      video.style.opacity = '0';
+    });
+  });
+</script>
+{% endblock content %}
+ 
