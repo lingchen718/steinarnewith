@@ -73,7 +73,7 @@
 
   @font-face {
     font-family: "Blanka-Regular";
-    src: url("{% static 'with_art/Blanka-Regular.otf' %}")
+    src: url("/static/with_art/Blanka-Regular.otf")
       format("opentype");
 
     font-weight: normal;
