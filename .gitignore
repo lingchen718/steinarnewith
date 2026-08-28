@@ -19,3 +19,4 @@ __pycache__/
 
 # 静态文件收集目录
 staticfiles/
+fresh_env/
