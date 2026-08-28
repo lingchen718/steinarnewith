@@ -14,6 +14,17 @@ from pathlib import Path
 import os
 import mimetypes
 
+import os
+from dotenv import load_dotenv   # pip install python-dotenv
+load_dotenv()
+
+import dj_database_url
+
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+
+
 mimetypes.add_type('video/mp4',  '.mp4')
 mimetypes.add_type('video/webm', '.webm')
 
@@ -26,13 +37,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-07!em7jr18)k*y38tclv0a!_a=h3npc5ch$_-n*b-a0s--%93('
+# SECRET_KEY = 'django-insecure-07!em7jr18)k*y38tclv0a!_a=h3npc5ch$_-n*b-a0s--%93('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-
-ALLOWED_HOSTS = []
+DEBUG = False                      # NEVER leave True in production
+ALLOWED_HOSTS = ['steinarnewith.com', 'www.steinarnewith.com']
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')   # move it out of the code
 
 
 # Application definition
@@ -57,6 +67,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = BASE_DIR/ 'media'
@@ -87,12 +99,20 @@ WSGI_APPLICATION = 'web_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': '5432',
     }
 }
+
+DATABASES = {'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))}
 
 
 # Password validation
@@ -131,6 +151,8 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
@@ -141,6 +163,12 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'studio@steinarnewith.no'
