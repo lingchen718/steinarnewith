@@ -1,5 +1,4 @@
 from django.contrib import admin
-from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from .models import ArtProject, Entry, CurrentProject, CurrentEntry, ContactMessage
 
 
@@ -7,17 +6,16 @@ from .models import ArtProject, Entry, CurrentProject, CurrentEntry, ContactMess
 # ArtProject
 # ============================================================
 
-class EntryInline(SortableInlineAdminMixin, admin.TabularInline):
+class EntryInline(admin.TabularInline):
     model = Entry
     extra = 1
     fields = ('title', 'image', 'video', 'order')
-    sortable_field_name = 'order'
     verbose_name = 'entry'
     verbose_name_plural = 'entries'
 
 
 @admin.register(ArtProject)
-class ArtProjectAdmin(SortableAdminMixin, admin.ModelAdmin):
+class ArtProjectAdmin(admin.ModelAdmin):
     list_display  = ['title', 'has_cover_image', 'has_cover_video', 'is_current', 'date_added', 'order']
     inlines       = [EntryInline]
     list_filter   = ['is_current', 'date_added']
@@ -50,7 +48,7 @@ class ArtProjectAdmin(SortableAdminMixin, admin.ModelAdmin):
 # ============================================================
 
 @admin.register(Entry)
-class EntryAdmin(SortableAdminMixin, admin.ModelAdmin):
+class EntryAdmin(admin.ModelAdmin):
     list_display  = ['title', 'artproject', 'has_image', 'has_video', 'order']
     list_filter   = ['artproject', 'order']
     search_fields = ['title']
@@ -87,22 +85,20 @@ class EntryAdmin(SortableAdminMixin, admin.ModelAdmin):
 # CurrentProject — now with inline entries
 # ============================================================
 
-class CurrentEntryInline(SortableInlineAdminMixin, admin.TabularInline):
+class CurrentEntryInline(admin.TabularInline):
     """Mirror of EntryInline, scoped to CurrentEntry."""
     model = CurrentEntry
     extra = 1
     fk_name = 'current_project'         # explicit since FK name ≠ model name
     fields = ('title', 'image', 'video', 'order')
-    sortable_field_name = 'order'
     verbose_name = 'current entry'
     verbose_name_plural = 'current entries'
-    autocomplete_fields = []            # not needed inside the inline
 
 
 @admin.register(CurrentProject)
-class CurrentProjectAdmin(SortableAdminMixin, admin.ModelAdmin):
+class CurrentProjectAdmin(admin.ModelAdmin):
     list_display  = ['title', 'is_published', 'date_added', 'order']
-    inlines       = [CurrentEntryInline]                  # ← this is the missing piece
+    inlines       = [CurrentEntryInline]
     list_filter   = ['is_published', 'date_added']
     search_fields = ['title', 'description']
     prepopulated_fields = {'slug': ('title',)}
@@ -123,7 +119,7 @@ class CurrentProjectAdmin(SortableAdminMixin, admin.ModelAdmin):
 # ============================================================
 
 @admin.register(CurrentEntry)
-class CurrentEntryAdmin(SortableAdminMixin, admin.ModelAdmin):
+class CurrentEntryAdmin(admin.ModelAdmin):
     list_display  = ['title', 'current_project', 'has_image', 'has_video', 'order']
     list_filter   = ['current_project', 'order']
     search_fields = ['title']
@@ -156,7 +152,9 @@ class CurrentEntryAdmin(SortableAdminMixin, admin.ModelAdmin):
         self.message_user(request, f"{queryset.count()} current entries resequenced.")
 
 
-
+# ============================================================
+# ContactMessage
+# ============================================================
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):

@@ -31,14 +31,16 @@ ALLOWED_HOSTS = os.environ.get(
 
 # ── Application definition ───────────────────────────────
 INSTALLED_APPS = [
-    'adminsortable2',
-    'with_art',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',                 # ← 加这两个
+    'cloudinary_storage',
+    'with_art',
 ]
 
 MIDDLEWARE = [
