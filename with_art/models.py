@@ -35,9 +35,7 @@ class SlugFromTitleMixin:
 # Shared mixin: auto-convert TIFF/PSD/GIF to JPEG on upload
 # ================================================================
 class WebImageConverterMixin:
-    """Subclasses define `image_field` (name of uploaded image attribute)
-    and `web_field` (name of convertedJPEG attribute)."""
-
+    """Subclasses define `image_field` and `web_field`."""
     image_field = 'cover_image'
     web_field = 'cover_image_web'
     max_dimension = 2400
@@ -48,25 +46,23 @@ class WebImageConverterMixin:
         self._generate_web_image()
 
     def _generate_web_image(self):
-        src_field_name = self.image_field
-        dst_field_name = self.web_field
-        src = getattr(self, src_field_name, None)
+        src = getattr(self, self.image_field, None)
         if not src:
             return
 
-        # Skip if the web version already exists and points to the same source
-        dst = getattr(self, dst_field_name, None)
-        if dst and dst.file and os.path.exists(dst.path):
-            # only regenerate if the source file changed
-            try:
-                if os.path.getmtime(src.path) <= os.path.getmtime(dst.path):
-                    return
-            except FileNotFoundError:
-                pass
+        base = os.path.splitext(os.path.basename(src.name))[0]
+        web_name = f'{base}.jpg'
+
+        # 已生成过同名 web 版就跳过（用文件名比较，兼容云端存储）
+        dst = getattr(self, self.web_field, None)
+        if dst and dst.name and dst.name.endswith(web_name):
+            return
 
         try:
-            img = Image.open(src.path)
-        except (FileNotFoundError, Image.UnidentifiedImageError):
+            src.open('rb')            # 兼容 Cloudinary 远程存储
+            img = Image.open(src)
+            img.load()
+        except (FileNotFoundError, Image.UnidentifiedImageError, ValueError):
             return
 
         if img.mode in ('RGBA', 'LA', 'P'):
@@ -83,10 +79,9 @@ class WebImageConverterMixin:
         img.save(buf, format='JPEG', quality=self.jpeg_quality, optimize=True, progressive=True)
         buf.seek(0)
 
-        base = os.path.splitext(os.path.basename(src.name))[0]
-        web_name = f'{base}.jpg'
-        getattr(self, dst_field_name).save(web_name, ContentFile(buf.read()), save=False)
-        super().save(update_fields=[dst_field_name])
+        getattr(self, self.web_field).save(web_name, ContentFile(buf.read()), save=False)
+        super().save(update_fields=[self.web_field])
+
 
 class ArtProject(SlugFromTitleMixin, WebImageConverterMixin, models.Model):
     title = models.CharField(max_length=200)
