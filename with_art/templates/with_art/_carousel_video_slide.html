@@ -1,0 +1,18 @@
+{# Renders one video slide. Expects: video_src (string URL). #}
+<figure class="carousel__slide carousel__slide--video" data-video="{{ video_src }}">
+  <div class="carousel__stage">
+    <video
+      src="{{ video_src }}"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      class="carousel__image carousel__video"
+      aria-label="{{ artproject.title }}{% if entry.title %} — {{ entry.title }}{% endif %}"
+    ></video>
+  </div>
+  {% if entry.title %}
+  <figcaption class="carousel__caption">{{ entry.title }}</figcaption>
+  {% endif %}
+</figure>

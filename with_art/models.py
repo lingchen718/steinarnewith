@@ -91,6 +91,8 @@ class ArtProject(SlugFromTitleMixin, WebImageConverterMixin, models.Model):
     cover_image     = models.ImageField(upload_to='artworks/', blank=True, verbose_name='Cover image')
     cover_image_web = models.ImageField(upload_to='artworks/web/', blank=True)  # auto-generated
     cover_video     = models.FileField(upload_to='covers/video/', blank=True, null=True)
+    cover_video_url = models.URLField('Video URL (Cloudinary)', blank=True, null=True)  # ← 新增
+
 
     is_current   = models.BooleanField(default=False, verbose_name='Currently on view',
                                         help_text='Show this project on the CURRENT page.')
@@ -117,6 +119,7 @@ class Entry(WebImageConverterMixin, models.Model):
     image      = models.ImageField(upload_to='entries/')
     image_web  = models.ImageField(upload_to='entries/web/', blank=True)  # auto-generated
     video      = models.FileField(upload_to='covers/entries/video/', blank=True, null=True)
+    video_url = models.URLField('Video URL (Cloudinary)', blank=True, null=True)
 
     description = models.TextField(blank=True)
     date_added  = models.DateTimeField(auto_now_add=True)
@@ -140,6 +143,7 @@ class CurrentProject(SlugFromTitleMixin, WebImageConverterMixin, models.Model):
     cover_image     = models.ImageField(upload_to='current/', blank=True, verbose_name='Cover image')
     cover_image_web = models.ImageField(upload_to='current/web/', blank=True)  # auto-generated
     cover_video     = models.FileField(upload_to='covers/video/', blank=True, null=True)
+    cover_video_url = models.URLField('Video URL (Cloudinary)', blank=True, null=True)
 
     date_added  = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=True, verbose_name='Published',
@@ -165,6 +169,7 @@ class CurrentEntry(WebImageConverterMixin, models.Model):
     image = models.ImageField(upload_to='current/entries/')
     image_web = models.ImageField(upload_to='current/entries/web/', blank=True)  # auto-generated
     video = models.FileField(upload_to='covers/entries/video/', blank=True, null=True)
+    video_url = models.URLField('Video URL (Cloudinary)', blank=True, null=True)
 
     description = models.TextField(blank=True)
     date_added  = models.DateTimeField(auto_now_add=True)
